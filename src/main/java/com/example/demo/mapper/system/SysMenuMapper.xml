@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.system.SysMenuMapper">
+  <resultMap id="BaseResultMap" type="com.example.demo.entity.system.SysMenu">
+    <id column="menu_id" jdbcType="VARCHAR" property="menuId" />
+    <result column="menu_name" jdbcType="VARCHAR" property="menuName" />
+    <result column="menu_perms" jdbcType="VARCHAR" property="menuPerms" />
+    <result column="menu_path" jdbcType="VARCHAR" property="menuPath" />
+    <result column="menu_component" jdbcType="VARCHAR" property="menuComponent" />
+    <result column="parent_id" jdbcType="VARCHAR" property="parentId" />
+    <result column="menu_icon" jdbcType="VARCHAR" property="menuIcon" />
+    <result column="menu_sort" jdbcType="INTEGER" property="menuSort" />
+    <result column="menu_type" jdbcType="VARCHAR" property="menuType" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="del_flag" jdbcType="INTEGER" property="delFlag" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    menu_id, menu_name, menu_perms, menu_path, menu_component, parent_id, menu_icon,
+    menu_sort, menu_type, create_time, update_time, del_flag, create_by, update_by
+  </sql>
+
+<!--
+
+  <resultMap id="MenuResultMap" type="com.example.demo.entity.system.SysMenu" extends="BaseResultMap">
+    <id column="menu_id" jdbcType="VARCHAR" property="menuId" />
+    <collection property="children" ofType="com.example.demo.entity.system.SysMenu" select="getListByParams" column="menu_id"></collection>
+  </resultMap>
+
+  <select id="getListByParams" resultMap="MenuResultMap" parameterType="java.lang.String">
+    SELECT * FROM sys_menu WHERE parent_id = #{menu_id} AND del_flag = ${@com.example.demo.enums.system.CommonEnum@NOT_DEL.getCode()} ORDER BY menu_sort ASC
+  </select>
+
+-->
+
+  <!--查询用户下菜单-->
+  <select id="queryMenuList" resultMap="BaseResultMap" parameterType="string">
+    SELECT sm.* FROM sys_menu sm
+    LEFT JOIN sys_role_menu srm ON sm.menu_id = srm.menu_id
+    LEFT JOIN sys_role sr ON sr.role_id = srm.role_id
+    LEFT JOIN sys_user_role sur ON sr.role_id = sur.role_id
+    LEFT JOIN sys_user su ON sur.user_id = su.user_id
+    WHERE su.user_id = #{userId,jdbcType=VARCHAR}
+      AND sm.del_flag = ${@com.example.demo.enums.system.CommonEnum@NOT_DEL.getCode()}
+      AND sr.del_flag = ${@com.example.demo.enums.system.CommonEnum@NOT_DEL.getCode()}
+      AND su.del_flag = ${@com.example.demo.enums.system.CommonEnum@NOT_DEL.getCode()}
+    ORDER by sm.menu_sort ASC;
+  </select>
+
+  <!--BEGIN 获取登陆用户权限 BEGIN-->
+  <resultMap id="BaseResultMap_ROLE_MENU" type="com.example.demo.entity.system.SysMenu" extends="BaseResultMap">
+    <id column="menu_id" property="menuId" jdbcType="VARCHAR"/>
+    <collection property="roleList" ofType="com.example.demo.entity.system.SysRole">
+      <id column="role_id" property="roleId" jdbcType="VARCHAR"/>
+      <result column="role_name" property="roleName" jdbcType="VARCHAR"/>
+      <result column="role_code" property="roleCode" jdbcType="VARCHAR"/>
+      <result column="data_type" property="dataType" jdbcType="INTEGER"/>
+      <result column="data_scope" property="dataScope" jdbcType="VARCHAR"/>
+    </collection>
+  </resultMap>
+
+  <select id="findAll" resultMap="BaseResultMap_ROLE_MENU">
+    SELECT sm.menu_id, sm.menu_name, sm.menu_perms, sm.menu_path, sm.menu_component, sr.role_id, sr.role_name, sr.role_code, sr.data_type, sr.data_scope
+    FROM sys_menu AS sm
+    LEFT JOIN sys_role_menu AS srm ON srm.menu_id = sm.menu_id
+    LEFT JOIN sys_role AS sr ON srm.role_id = sr.role_id
+    WHERE sm.del_flag = ${@com.example.demo.enums.system.CommonEnum@NOT_DEL.getCode()}
+    AND sr.del_flag = ${@com.example.demo.enums.system.CommonEnum@NOT_DEL.getCode()}
+  </select>
+  <!--END 获取登陆用户权限 END -->
+
+  <!--根据用户ID查询权限集合-->
+  <select id="findPermsByUserId" parameterType="java.lang.String" resultType="string">
+    SELECT sm.menu_perms FROM sys_menu AS sm
+    LEFT JOIN sys_role_menu AS srm ON sm.menu_id = srm.menu_id
+    LEFT JOIN sys_role AS sr ON srm.role_id = sr.role_id
+    LEFT JOIN sys_user_role AS sur ON sr.role_id = sur.role_id
+    WHERE sur.user_id = #{userId,jdbcType=VARCHAR}
+  </select>
+
+  <!--根据用户ID查询按钮集合-->
+  <select id="queryButtonPermsListByUserId" parameterType="java.lang.String" resultType="string">
+    SELECT sm.menu_perms FROM sys_menu AS sm
+    LEFT JOIN sys_role_menu AS srm ON sm.menu_id = srm.menu_id
+    LEFT JOIN sys_role AS sr ON srm.role_id = sr.role_id
+    LEFT JOIN sys_user_role AS sur ON sr.role_id = sur.role_id
+    WHERE sur.user_id = #{userId,jdbcType=VARCHAR}
+    AND sm.menu_type = ${@com.example.demo.enums.system.MenuEnum@BUTTON.getCode()}
+  </select>
+
+
+  <!-- 根据PK删除校验 -->
+  <select id="findChildrenMenuCountByParentId" parameterType="java.lang.String" resultType="integer">
+    SELECT COUNT(menu_id) FROM sys_menu WHERE parent_id = #{menuId,jdbcType=VARCHAR}
+    AND del_flag = ${@com.example.demo.enums.system.CommonEnum@NOT_DEL.getCode()}
+  </select>
+  <!-- 根据PK删除 -->
+  <update id="deleteByPrimaryKey" parameterType="java.lang.String">
+    UPDATE sys_menu SET del_flag = ${@com.example.demo.enums.system.CommonEnum@IS_DEL.getCode()}
+    WHERE menu_id = #{menuId,jdbcType=VARCHAR}
+  </update>
+
+  <!--单一查询-->
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sys_menu
+    where menu_id = #{menuId,jdbcType=VARCHAR}
+  </select>
+
+  <!--新增 BEGIN-->
+  <insert id="insert" parameterType="com.example.demo.entity.system.SysMenu">
+    INSERT INTO sys_menu
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="menuId != null">
+        menu_id,
+      </if>
+      <if test="menuName != null">
+        menu_name,
+      </if>
+      <if test="menuPerms != null">
+        menu_perms,
+      </if>
+      <if test="menuPath != null">
+        menu_path,
+      </if>
+      <if test="menuComponent != null">
+        menu_component,
+      </if>
+      <if test="parentId != null">
+        parent_id,
+      </if>
+      <if test="menuIcon != null">
+        menu_icon,
+      </if>
+      <if test="menuSort != null">
+        menu_sort,
+      </if>
+      <if test="menuType != null">
+        menu_type,
+      </if>
+      <if test="delFlag != null">
+        del_flag,
+      </if>
+      <if test="createBy != null">
+        create_by,
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="menuId != null">
+        #{menuId,jdbcType=VARCHAR},
+      </if>
+      <if test="menuName != null">
+        #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="menuPerms != null">
+        #{menuPerms,jdbcType=VARCHAR},
+      </if>
+      <if test="menuPath != null">
+        #{menuPath,jdbcType=VARCHAR},
+      </if>
+      <if test="menuComponent != null">
+        #{menuComponent,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null">
+        #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="menuIcon != null">
+        #{menuIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="menuSort != null">
+        #{menuSort,jdbcType=INTEGER},
+      </if>
+      <if test="menuType != null">
+        #{menuType,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null">
+        #{delFlag,jdbcType=INTEGER},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=VARCHAR},
+        now(),
+      </if>
+    </trim>
+  </insert>
+  <!--新增 END-->
+
+  <!--更新菜单-->
+  <update id="update" parameterType="com.example.demo.entity.system.SysMenu">
+    UPDATE sys_menu
+    SET menu_name = #{menuName,jdbcType=VARCHAR},
+        menu_perms = #{menuPerms,jdbcType=VARCHAR},
+        menu_path = #{menuPath,jdbcType=VARCHAR},
+        menu_component = #{menuComponent,jdbcType=VARCHAR},
+        parent_id = #{parentId,jdbcType=VARCHAR},
+        menu_icon = #{menuIcon,jdbcType=VARCHAR},
+        menu_sort = #{menuSort,jdbcType=INTEGER},
+        menu_type = #{menuType,jdbcType=VARCHAR},
+        update_time = now(),
+        update_by = #{updateBy,jdbcType=VARCHAR}
+    WHERE menu_id = #{menuId,jdbcType=VARCHAR}
+  </update>
+
+  <!--更新菜单-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.demo.entity.system.SysMenu">
+    UPDATE sys_menu
+    <set>
+      <if test="menuName != null">
+        menu_name = #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="menuPerms != null">
+        menu_perms = #{menuPerms,jdbcType=VARCHAR},
+      </if>
+      <if test="menuPath != null">
+        menu_path = #{menuPath,jdbcType=VARCHAR},
+      </if>
+      <if test="menuComponent != null">
+        menu_component = #{menuComponent,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null">
+        parent_id = #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="menuIcon != null">
+        menu_icon = #{menuIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="menuSort != null">
+        menu_sort = #{menuSort,jdbcType=INTEGER},
+      </if>
+      <if test="menuType != null">
+        menu_type = #{menuType,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null">
+        del_flag = #{delFlag,jdbcType=INTEGER},
+      </if>
+      <if test="updateBy != null">
+        update_by = #{updateBy,jdbcType=VARCHAR},
+        update_time = now(),
+      </if>
+    </set>
+    WHERE menu_id = #{menuId,jdbcType=VARCHAR}
+  </update>
+
+
+
+</mapper>

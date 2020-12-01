@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.system.SysUserMapper">
+  <resultMap id="BaseResultMap" type="com.example.demo.entity.system.SysUser">
+    <id column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="organization_id" jdbcType="VARCHAR" property="organizationId" />
+    <result column="dept_id" jdbcType="VARCHAR" property="deptId" />
+    <result column="job_id" jdbcType="VARCHAR" property="jobId" />
+    <result column="true_name" jdbcType="VARCHAR" property="trueName" />
+    <result column="gender" jdbcType="INTEGER" property="gender" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="id_card" jdbcType="VARCHAR" property="idCard" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="avatar" jdbcType="VARCHAR" property="avatar" />
+    <result column="status_flag" jdbcType="INTEGER" property="statusFlag" />
+    <result column="user_type" jdbcType="INTEGER" property="userType" />
+    <result column="del_flag" jdbcType="INTEGER" property="delFlag" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+    <result column="openid" jdbcType="VARCHAR" property="openid" />
+  </resultMap>
+
+  <resultMap id="BaseResultMap_A" type="com.example.demo.entity.system.SysUser" extends="BaseResultMap">
+    <id column="user_id" property="userId" jdbcType="VARCHAR"/>
+    <collection property="sysRoleList" ofType="com.example.demo.entity.system.SysRole">
+      <id column="role_id" property="roleId" jdbcType="VARCHAR"/>
+      <result column="role_name" property="roleName" jdbcType="VARCHAR"/>
+      <result column="role_code" property="roleCode" jdbcType="VARCHAR"/>
+      <result column="data_type" property="dataType" jdbcType="INTEGER"/>
+      <result column="data_scope" property="dataScope" jdbcType="VARCHAR"/>
+    </collection>
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    user_id, username, organization_id, dept_id, job_id, true_name, gender, email, phone, id_card, address, avatar,
+    status_flag, user_type, del_flag, create_time, update_time, create_by, update_by, openid
+  </sql>
+<!--
+  <select id="findByUsername" resultMap="BaseResultMap_A">
+    SELECT su.user_id,su.true_name,su.username,su.password, su.status_flag,su.user_type, sr.role_id, sr.role_name,sr.role_code
+    FROM sys_user su
+       LEFT JOIN sys_user_role sur ON sur.user_id = su.user_id
+       LEFT JOIN sys_role sr ON sr.role_id = sur.role_id
+    WHERE su.username = #{username,jdbcType=VARCHAR}
+      AND su.del_flag = ${@com.example.demo.enums.system.CommonEnum@NOT_DEL.getCode()}
+      AND sr.del_flag = ${@com.example.demo.enums.system.CommonEnum@NOT_DEL.getCode()}
+  </select>
+-->
+  <select id="findByUsername" resultMap="BaseResultMap_A">
+    SELECT user_id,true_name,username,`password`, status_flag, user_type
+    FROM sys_user
+    WHERE username = #{username,jdbcType=VARCHAR}
+      AND del_flag = ${@com.example.demo.enums.system.CommonEnum@NOT_DEL.getCode()}
+  </select>
+
+  <select id="getUserInfoByUsername" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM sys_user
+    WHERE username = #{userName,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sys_user
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from sys_user
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.example.demo.entity.system.SysUser">
+    insert into sys_user (user_id, username, `password`, organization_id,
+      dept_id, job_id, true_name, gender, email,
+      phone, id_card, address,
+      avatar, status_flag, user_type,
+      del_flag, create_time, update_time,
+      create_by, update_by, openid)
+    values (#{userId,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+      #{organizationId,jdbcType=VARCHAR}, #{deptId,jdbcType=VARCHAR}, #{jobId,jdbcType=VARCHAR},
+      #{trueName,jdbcType=VARCHAR}, #{gender,jdbcType=INTEGER}, #{email,jdbcType=VARCHAR},
+      #{phone,jdbcType=VARCHAR}, #{idCard,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR},
+      #{avatar,jdbcType=VARCHAR}, #{statusFlag,jdbcType=INTEGER}, #{userType,jdbcType=INTEGER},
+      #{delFlag,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+      #{createBy,jdbcType=VARCHAR}, #{updateBy,jdbcType=VARCHAR}, #{openid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.demo.entity.system.SysUser">
+    insert into sys_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="username != null">
+        username,
+      </if>
+      <if test="password != null">
+        `password`,
+      </if>
+      <if test="organizationId != null">
+        organization_id,
+      </if>
+      <if test="deptId != null">
+        dept_id,
+      </if>
+      <if test="jobId != null">
+        job_id,
+      </if>
+      <if test="trueName != null">
+        true_name,
+      </if>
+      <if test="gender != null">
+        gender,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="idCard != null">
+        id_card,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="avatar != null">
+        avatar,
+      </if>
+      <if test="statusFlag != null">
+        status_flag,
+      </if>
+      <if test="userType != null">
+        user_type,
+      </if>
+      <if test="delFlag != null">
+        del_flag,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="createBy != null">
+        create_by,
+      </if>
+      <if test="updateBy != null">
+        update_by,
+      </if>
+      <if test="openid != null">
+        openid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="organizationId != null">
+        #{organizationId,jdbcType=VARCHAR},
+      </if>
+      <if test="deptId != null">
+        #{deptId,jdbcType=VARCHAR},
+      </if>
+      <if test="jobId != null">
+        #{jobId,jdbcType=VARCHAR},
+      </if>
+      <if test="trueName != null">
+        #{trueName,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null">
+        #{gender,jdbcType=INTEGER},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="idCard != null">
+        #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="avatar != null">
+        #{avatar,jdbcType=VARCHAR},
+      </if>
+      <if test="statusFlag != null">
+        #{statusFlag,jdbcType=INTEGER},
+      </if>
+      <if test="userType != null">
+        #{userType,jdbcType=INTEGER},
+      </if>
+      <if test="delFlag != null">
+        #{delFlag,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateBy != null">
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="openid != null">
+        #{openid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.demo.entity.system.SysUser">
+    update sys_user
+    <set>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        `password` = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="organizationId != null">
+        organization_id = #{organizationId,jdbcType=VARCHAR},
+      </if>
+      <if test="deptId != null">
+        dept_id = #{deptId,jdbcType=VARCHAR},
+      </if>
+      <if test="jobId != null">
+        job_id = #{jobId,jdbcType=VARCHAR},
+      </if>
+      <if test="trueName != null">
+        true_name = #{trueName,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null">
+        gender = #{gender,jdbcType=INTEGER},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="idCard != null">
+        id_card = #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="avatar != null">
+        avatar = #{avatar,jdbcType=VARCHAR},
+      </if>
+      <if test="statusFlag != null">
+        status_flag = #{statusFlag,jdbcType=INTEGER},
+      </if>
+      <if test="userType != null">
+        user_type = #{userType,jdbcType=INTEGER},
+      </if>
+      <if test="delFlag != null">
+        del_flag = #{delFlag,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateBy != null">
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="openid != null">
+        openid = #{openid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.demo.entity.system.SysUser">
+    update sys_user
+    set username = #{username,jdbcType=VARCHAR},
+      `password` = #{password,jdbcType=VARCHAR},
+      organization_id = #{organizationId,jdbcType=VARCHAR},
+      dept_id = #{deptId,jdbcType=VARCHAR},
+      job_id = #{jobId,jdbcType=VARCHAR},
+      true_name = #{trueName,jdbcType=VARCHAR},
+      gender = #{gender,jdbcType=INTEGER},
+      email = #{email,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      id_card = #{idCard,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      avatar = #{avatar,jdbcType=VARCHAR},
+      status_flag = #{statusFlag,jdbcType=INTEGER},
+      user_type = #{userType,jdbcType=INTEGER},
+      del_flag = #{delFlag,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      update_by = #{updateBy,jdbcType=VARCHAR},
+      openid = #{openid,jdbcType=VARCHAR}
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </update>
+</mapper>
