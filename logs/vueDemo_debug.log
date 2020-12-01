@@ -1,9 +1,0 @@
-2020-12-01 14:09:22.420 [main] DEBUG com.example.demo.DemoApplication - Running with Spring Boot v2.1.5.RELEASE, Spring v5.1.7.RELEASE
-2020-12-01 14:09:25.281 [main] DEBUG com.example.demo.security.code.ImageCodeFilter - Filter 'imageCodeFilter' configured for use
-2020-12-01 14:09:25.282 [main] DEBUG c.e.demo.security.JwtAuthenticationTokenFilter - Filter 'jwtAuthenticationTokenFilter' configured for use
-2020-12-01 14:11:04.215 [main] DEBUG com.example.demo.DemoApplication - Running with Spring Boot v2.1.5.RELEASE, Spring v5.1.7.RELEASE
-2020-12-01 14:11:06.547 [main] DEBUG com.example.demo.security.code.ImageCodeFilter - Filter 'imageCodeFilter' configured for use
-2020-12-01 14:11:06.548 [main] DEBUG c.e.demo.security.JwtAuthenticationTokenFilter - Filter 'jwtAuthenticationTokenFilter' configured for use
-2020-12-01 14:16:09.153 [main] DEBUG com.example.demo.DemoApplication - Running with Spring Boot v2.1.5.RELEASE, Spring v5.1.7.RELEASE
-2020-12-01 14:16:11.618 [main] DEBUG com.example.demo.security.code.ImageCodeFilter - Filter 'imageCodeFilter' configured for use
-2020-12-01 14:16:11.619 [main] DEBUG c.e.demo.security.JwtAuthenticationTokenFilter - Filter 'jwtAuthenticationTokenFilter' configured for use
