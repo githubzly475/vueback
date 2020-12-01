@@ -1,4 +1,0 @@
-spring:
-  profiles:
-    #通过这个来切换开发和生产的环境
-    active: dev
