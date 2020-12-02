@@ -1,5 +1,12 @@
 package com.example.demo.security;
 
+import com.example.demo.entity.system.SysUser;
+import com.example.demo.enums.system.SysUserEnum;
+import com.example.demo.security.util.ResultEnum;
+import com.example.demo.security.util.SecurityUser;
+import com.example.demo.service.system.SysUserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,23 +27,22 @@ import java.util.Set;
 @Component
 public class MyUserDetailsServiceImpl implements UserDetailsService {
 
-//    @Autowired
-//    private SysUserService userService;
+    @Autowired
+    private SysUserService userService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//        SysUser sysUser = userService.findByUsername(username);
-//        if (sysUser == null) {
+        SysUser sysUser = userService.findByUsername(username);
+        if (sysUser == null) {
             /**
              * 不返回用户不存在
              */
-//            throw new UsernameNotFoundException(ResultEnum.USER_PWD_ERROR.getMessage());
-//        }else if(SysUserEnum.DISABLED.getCode() == sysUser.getStatusFlag()){
-//            throw new DisabledException(ResultEnum.USER_DISABLED.getMessage());
-//        }
-//        Collection<? extends GrantedAuthority> userAuthorities = getUserAuthorities(sysUser.getUserId());
-//        return new SecurityUser(sysUser.getUserId(),sysUser.getUsername(), sysUser.getPassword(), userAuthorities);
-        return null;
+            throw new UsernameNotFoundException(ResultEnum.USER_PWD_ERROR.getMessage());
+        }else if(SysUserEnum.DISABLED.getCode() == sysUser.getStatusFlag()){
+            throw new DisabledException(ResultEnum.USER_DISABLED.getMessage());
+        }
+        Collection<? extends GrantedAuthority> userAuthorities = getUserAuthorities(sysUser.getUserId());
+        return new SecurityUser(sysUser.getUserId(),sysUser.getUsername(), sysUser.getPassword(), userAuthorities);
     }
 
 
@@ -50,12 +56,10 @@ public class MyUserDetailsServiceImpl implements UserDetailsService {
         // 获取用户拥有的角色
         // 用户权限列表，根据用户拥有的权限标识与如 @PreAuthorize("hasAuthority('sys:menu:view')") 标注的接口对比，决定是否可以调用接口
         // 权限集合
-//        Set<String> permissions = userService.findPermsByUserId(userId);
-        Set<String> permissions = null;
-
-//        // 角色集合
-//        Set<String> roleIds = userService.findRoleIdByUserId(userId);
-//        permissions.addAll(roleIds);
+        Set<String> permissions = userService.findPermsByUserId(userId);
+        // 角色集合
+        Set<String> roleIds = userService.findRoleIdByUserId(userId);
+        permissions.addAll(roleIds);
         Collection<? extends GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(permissions.toArray(new String[0]));
         return authorities;
     }
