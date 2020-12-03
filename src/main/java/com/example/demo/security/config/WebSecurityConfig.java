@@ -84,7 +84,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        imageCodeFilter.setAuthenticationFailureHandler(myAuthenticationFailureHandler);
+        // TODO 删除图片验证
+        // imageCodeFilter.setAuthenticationFailureHandler(myAuthenticationFailureHandler);
         http
             .csrf().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
