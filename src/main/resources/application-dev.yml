@@ -61,7 +61,7 @@ mybatis:
 pagehelper:
   helperDialect: mysql
   #分页合理化
-  reasonable: true
+  reasonable: false
   #是否支持接口参数来传递分页参数，默认false
   supportMethodsArguments: true
   #当设置为true的时候，如果pagesize设置为0（或RowBounds的limit=0），就不执行分页，返回全部结果

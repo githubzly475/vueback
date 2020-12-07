@@ -1,13 +1,13 @@
 package com.example.demo.controller.system;
 
-import com.example.demo.entity.system.Temp;
+import com.example.demo.service.system.SysDictService;
 import com.example.demo.utils.ResultData;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.annotation.Resource;
 
 /**
  * 系统字典表
@@ -19,22 +19,21 @@ import java.util.List;
 @RequestMapping("sys/dict")
 public class SysDictController {
 
+    @Resource
+    private SysDictService sysDictService;
+
     @GetMapping("list")
-    public ResultData getDictList(String code, String name, Integer pageNo, Integer pageSize){
-        List<Temp> list = new ArrayList<>();
-        for (int i = 0; i <= 9; i++){
-            list.add(new Temp(i+"","字典Name"+i,"字典Code"+i));
-        }
-        return ResultData.ok(list);
+    public ResultData getDictList(@RequestParam(value = "pageNo", required = false, defaultValue = "1") Integer pageNo,
+                                  @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
+                                  String code, String name){
+        return sysDictService.getKeyList(pageNo, pageSize, code, name);
     }
 
     @GetMapping("value/list")
-    public ResultData getDictValueList(String keyId, String code, String name, Integer pageNo, Integer pageSize){
-        List<Temp> list = new ArrayList<>();
-        for (int i = 0; i <= 9; i++){
-            list.add(new Temp(i+""+keyId,"字典Name"+i,"字典Code"+i));
-        }
-        return ResultData.ok(list);
+    public ResultData getDictValueList(@RequestParam(value = "pageNo", required = false, defaultValue = "1") Integer pageNo,
+                                       @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
+                                       String keyId, String code, String name){
+        return sysDictService.getValueList(pageNo, pageSize, keyId, code, name);
     }
 
 }

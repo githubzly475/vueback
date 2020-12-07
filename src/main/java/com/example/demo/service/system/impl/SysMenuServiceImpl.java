@@ -2,12 +2,14 @@ package com.example.demo.service.system.impl;
 
 import com.example.demo.cache.RedisCache;
 import com.example.demo.cache.UserCache;
+import com.example.demo.entity.constant.Constant;
 import com.example.demo.entity.system.SysMenu;
 import com.example.demo.mapper.system.SysMenuMapper;
 import com.example.demo.service.system.SysMenuService;
 import com.example.demo.utils.MenuTreeUtil;
 import com.example.demo.utils.ResultData;
 import com.example.demo.utils.UUIDUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -39,16 +41,18 @@ public class SysMenuServiceImpl implements SysMenuService {
     public List<SysMenu> queryMenuByUserId(String userId) {
         List<SysMenu> sysMenus = new ArrayList<>();
         List<SysMenu> menuList = sysMenuMapper.queryMenuList(userId);
-        menuList.forEach(menu -> {
-            if(menu.getParentId() == null || "0".equals(menu.getParentId())){
-                menu.setLevel(0);
-                if(MenuTreeUtil.exists(sysMenus, menu)){
-                    sysMenus.add(menu);
+        if(CollectionUtils.isNotEmpty(menuList)) {
+            menuList.forEach(menu -> {
+                if(menu.getParentId() == null || Constant.MENU_TYPE.equals(menu.getParentId())){
+                    menu.setLevel(0);
+                    if(MenuTreeUtil.exists(sysMenus, menu)){
+                        sysMenus.add(menu);
+                    }
                 }
-            }
-        });
-        sysMenus.sort(Comparator.comparing(SysMenu::getMenuSort));
-        MenuTreeUtil.findChildren(sysMenus, menuList, 0);
+            });
+            sysMenus.sort(Comparator.comparing(SysMenu::getMenuSort));
+            MenuTreeUtil.findChildren(sysMenus, menuList, 0);
+        }
         return sysMenus;
     }
 

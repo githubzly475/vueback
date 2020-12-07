@@ -12,7 +12,6 @@ import com.example.demo.security.util.SecurityUser;
 import com.example.demo.service.system.SysUserService;
 import com.example.demo.utils.ResultData;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -107,7 +106,7 @@ public class LoginController {
         final String refresh_token = jwtTokenUtil.generateTokenRefreshToken(userDetails);
 
         // 设置token缓存有效期
-        redisCache.set("token_" + access_token, refresh_token,this.expiration * 2 / 1000);
+        redisCache.set("token_" + access_token, refresh_token, expiration * 2 / 1000);
 
         Map<String, Object> map = new HashMap<>(16);
         map.put("tokenValue", access_token);
