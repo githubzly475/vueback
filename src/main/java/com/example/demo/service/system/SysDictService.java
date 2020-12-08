@@ -1,9 +1,8 @@
 package com.example.demo.service.system;
 
-import com.example.demo.entity.system.SysUser;
+import com.example.demo.entity.sysDictKey.SysDictKey;
+import com.example.demo.entity.sysDictValue.SysDictValue;
 import com.example.demo.utils.ResultData;
-
-import java.util.Set;
 
 /**
  * 字典Service
@@ -18,21 +17,72 @@ public interface SysDictService {
      *
      * @param pageNo pageNo
      * @param pageSize pageSize
-     * @param code code
-     * @param name name
+     * @param sysDictKey sysDictKey
      * @return ResultData
      */
-    ResultData getKeyList(Integer pageNo, Integer pageSize, String code, String name);
+    ResultData getKeyList(Integer pageNo, Integer pageSize, SysDictKey sysDictKey);
+
+    /**
+     * 新增数据
+     * @param sysDictKey sysDictKey
+     * @return
+     */
+    ResultData saveKey(SysDictKey sysDictKey);
+
+    /**
+     * 更新数据
+     * @param sysDictKey sysDictKey
+     * @return
+     */
+    ResultData updateKey(SysDictKey sysDictKey);
+
+    /**
+     * 删除
+     * @param id
+     * @return
+     */
+    ResultData deleteKeyById(String id);
+
+    /**
+     * 批量删除
+     * @param ids
+     * @return
+     */
+    ResultData deleteKeyByIdBatch(String ids);
+
+    /***********************************************************************
+     *****************************字典值设置*********************************
+     ***********************************************************************/
 
     /**
      * 获取某字典下字典值
      *
      * @param pageNo pageNo
      * @param pageSize pageSize
-     * @param keyId keyId
-     * @param code code
-     * @param name name
+     * @param sysDictValuee sysDictValuee
      * @return ResultData
      */
-    ResultData getValueList(Integer pageNo, Integer pageSize, String keyId, String code, String name);
+    ResultData getValueList(Integer pageNo, Integer pageSize, SysDictValue sysDictValuee);
+
+    /**
+     * 新增
+     * @param sysDictValue sysDictValue
+     * @return
+     */
+    ResultData saveValue(SysDictValue sysDictValue);
+
+    /**
+     * 修改
+     * @param sysDictValue sysDictValue
+     * @return
+     */
+    ResultData updateValue(SysDictValue sysDictValue);
+
+    /**
+     * 删除
+     * @param id
+     * @return
+     */
+    ResultData deleteValueById(String id);
+
 }

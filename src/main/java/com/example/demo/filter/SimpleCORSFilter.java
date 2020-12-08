@@ -32,5 +32,6 @@ public class SimpleCORSFilter implements Filter {
         filterChain.doFilter(servletRequest, servletResponse);
     }
 
+    @Override
     public void destroy() {}
 }

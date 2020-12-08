@@ -71,7 +71,7 @@ public class SysLogAspect {
         // 开始时间
         long beginTime = Instant.now().toEpochMilli();
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
-        sysLog.setId(UUIDUtils.get32UUID());
+        sysLog.setId(UUIDUtils.getUUID());
         sysLog.setUserName(userCache.getUsername());
         sysLog.setActionUrl(request.getRequestURI());
         sysLog.setStartTime(new Date());

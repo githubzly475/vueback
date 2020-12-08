@@ -1,4 +1,4 @@
-package com.example.demo.entity.sysDictKey;
+package com.example.demo.entity.sysDictValue;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,13 +8,14 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @ToString
-@Table(name = "sys_dict_key")
-public class SysDictKey {
+@Table(name = "sys_dict_value")
+public class SysDictValue {
     /**
      * 主键UUID
      */
@@ -25,23 +26,40 @@ public class SysDictKey {
     /**
      * 名称
      */
-    @Column(name = "key_name")
-    private String keyName;
+    @Column(name = "value_name")
+    private String valueName;
 
     /**
      * 标识
      */
-    @Column(name = "key_code")
-    private String keyCode;
+    @Column(name = "value_code")
+    private String valueCode;
+
+    /**
+     * 字典ID
+     */
+    @Column(name = "key_id")
+    private String keyId;
+
+    /**
+     * 排序
+     */
+    @Column(name = "value_sort")
+    private Integer valueSort;
+
+    /**
+     * 父Id
+     */
+    @Column(name = "parent_id")
+    private String parentId;
 
     /**
      * 备注
      */
-    @Column(name = "key_remark")
-    private String keyRemark;
+    private String remark;
 
     /**
-     * 删除标识0-正常，1-删除
+     * 0-正常 1-删除
      */
     @Column(name = "del_flag")
     private Integer delFlag;

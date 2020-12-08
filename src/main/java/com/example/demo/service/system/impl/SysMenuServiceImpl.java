@@ -2,7 +2,7 @@ package com.example.demo.service.system.impl;
 
 import com.example.demo.cache.RedisCache;
 import com.example.demo.cache.UserCache;
-import com.example.demo.entity.constant.Constant;
+import com.example.demo.constant.Constant;
 import com.example.demo.entity.system.SysMenu;
 import com.example.demo.mapper.system.SysMenuMapper;
 import com.example.demo.service.system.SysMenuService;
@@ -73,7 +73,7 @@ public class SysMenuServiceImpl implements SysMenuService {
 
     @Override
     public ResultData save(SysMenu bean) {
-        bean.setMenuId(UUIDUtils.get32UUID());
+        bean.setMenuId(UUIDUtils.getUUID());
         bean.setCreateBy(userCache.getUserId());
         int count = sysMenuMapper.insert(bean);
         if(count > 0){
@@ -91,7 +91,7 @@ public class SysMenuServiceImpl implements SysMenuService {
             redisCache.del(userCache.getUsername());
             return ResultData.ok();
         }
-        return ResultData.error("添加失败");
+        return ResultData.error("修改失败");
     }
 
 

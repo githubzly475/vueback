@@ -15,4 +15,23 @@
     <result column="create_by" property="createBy" jdbcType="VARCHAR" />
     <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
   </resultMap>
+
+  <select id="queryKeyList" resultMap="BaseResultMap" parameterType="com.example.demo.entity.sysDictKey.SysDictKey">
+    select id, key_name, key_code, key_remark from sys_dict_key where del_flag =  ${@com.example.demo.enums.system.CommonEnum@NOT_DEL.getCode()}
+    <if test="keyName != null and keyName !='' ">
+      and key_name like CONCAT('%', #{keyName,jdbcType=VARCHAR}, '%')
+    </if>
+    <if test="keyCode != null and keyCode !='' ">
+      and key_code = #{keyCode,jdbcType=VARCHAR}
+    </if>
+    order by create_time desc
+  </select>
+
+  <delete id="batchDeleteById" parameterType="java.lang.String" >
+    delete from sys_dict_key where Id in
+    <foreach collection="ids" item="id" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+  </delete>
+
 </mapper>

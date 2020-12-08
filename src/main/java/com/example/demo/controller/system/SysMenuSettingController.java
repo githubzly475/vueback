@@ -6,7 +6,6 @@ import com.example.demo.entity.system.SysMenu;
 import com.example.demo.log.annotation.SysLog;
 import com.example.demo.service.system.SysMenuService;
 import com.example.demo.utils.ResultData;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,11 +35,7 @@ public class SysMenuSettingController {
     public ResultData getMenuTree(){
         String userId = userCache.getUserId();
         List<SysMenu> list = sysMenuService.queryMenuByUserId(userId);
-        if(CollectionUtils.isNotEmpty(list)){
-            return ResultData.ok(list);
-        } else {
-            return ResultData.error("暂无数据！");
-        }
+        return ResultData.ok(list);
     }
 
     @SysLog(description = "删除菜单")
