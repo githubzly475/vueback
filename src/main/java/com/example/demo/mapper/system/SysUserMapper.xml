@@ -71,6 +71,14 @@
     from sys_user
     where user_id = #{userId,jdbcType=VARCHAR}
   </select>
+  <select id="qyeryUserList" resultType="com.example.demo.entity.system.SysUser">
+    select * from sys_user
+    where del_flag=0
+    <if test="userName !=null and userName !=''">
+      and username like CONCAT('%',#{userName},'%')
+    </if>
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from sys_user
     where user_id = #{userId,jdbcType=VARCHAR}

@@ -49,4 +49,10 @@ public interface SysMenuService {
      * @return
      */
     ResultData update(SysMenu bean);
+
+    List<SysMenu> queryMenuTree(String userId);
+
+    SysMenu queryById(String id);
+
+    void deleteById(String id);
 }

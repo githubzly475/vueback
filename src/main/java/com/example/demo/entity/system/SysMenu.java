@@ -58,6 +58,8 @@ public class SysMenu implements Serializable {
 
     /**
      * 菜单类型 （类型   0：目录   1：菜单   2：按钮）
+
+
      */
     private Integer menuType;
 
@@ -65,7 +67,6 @@ public class SysMenu implements Serializable {
      * 创建时间
      */
     private Date createTime;
-
     /**
      * 更新时间
      */

@@ -22,19 +22,31 @@
     menu_id, menu_name, menu_perms, menu_path, menu_component, parent_id, menu_icon,
     menu_sort, menu_type, create_time, update_time, del_flag, create_by, update_by
   </sql>
+  <update id="deleteByIds">
+    update sys_menu set del_flag=1
+    <where>
+        <if test="menuList !=null and menuList.size>0">
+          menu_id in
+          <foreach collection="menuList" open="(" separator="," close=")" item="item">
+            #{item}
+          </foreach>
+        </if>
+    </where>
+  </update>
 
-<!--
 
-  <resultMap id="MenuResultMap" type="com.example.demo.entity.system.SysMenu" extends="BaseResultMap">
-    <id column="menu_id" jdbcType="VARCHAR" property="menuId" />
-    <collection property="children" ofType="com.example.demo.entity.system.SysMenu" select="getListByParams" column="menu_id"></collection>
-  </resultMap>
+  <!--
 
-  <select id="getListByParams" resultMap="MenuResultMap" parameterType="java.lang.String">
-    SELECT * FROM sys_menu WHERE parent_id = #{menu_id} AND del_flag = ${@com.example.demo.enums.system.CommonEnum@NOT_DEL.getCode()} ORDER BY menu_sort ASC
-  </select>
+    <resultMap id="MenuResultMap" type="com.example.demo.entity.system.SysMenu" extends="BaseResultMap">
+      <id column="menu_id" jdbcType="VARCHAR" property="menuId" />
+      <collection property="children" ofType="com.example.demo.entity.system.SysMenu" select="getListByParams" column="menu_id"></collection>
+    </resultMap>
 
--->
+    <select id="getListByParams" resultMap="MenuResultMap" parameterType="java.lang.String">
+      SELECT * FROM sys_menu WHERE parent_id = #{menu_id} AND del_flag = ${@com.example.demo.enums.system.CommonEnum@NOT_DEL.getCode()} ORDER BY menu_sort ASC
+    </select>
+
+  -->
 
   <!--查询用户下菜单-->
   <select id="queryMenuList" resultMap="BaseResultMap" parameterType="string">
@@ -109,6 +121,24 @@
     <include refid="Base_Column_List" />
     from sys_menu
     where menu_id = #{menuId,jdbcType=VARCHAR}
+  </select>
+  <!--此处先不用inner join -->
+    <select id="queryMenuListByUserId" resultType="com.example.demo.entity.system.SysMenu">
+     select m.*
+        from sys_menu m
+        left JOIN sys_role_menu rm on rm.menu_id=m.menu_id
+      left JOIN sys_role r on r.role_id=rm.role_id
+      left JOIN sys_user_role ur on ur.role_id=r.role_id
+        where m.del_flag=0 and  m.parent_id=0
+        <if test="userId !=null and userId !=''">
+          and ur.user_id=#{userId,jdbcType=VARCHAR}
+        </if>
+
+
+    </select>
+  <select id="getChildreByParentId" resultType="com.example.demo.entity.system.SysMenu">
+    select * from sys_menu where del_flag=0 and
+    parent_id=#{menuId}
   </select>
 
   <!--新增 BEGIN-->

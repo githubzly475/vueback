@@ -18,8 +18,7 @@ import java.io.IOException;
 /**
  * JWT登陆授权过滤器
  *
- * @author: N469
- * @date: 2019-12-09 09:19
+
  */
 @Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {

@@ -2,8 +2,10 @@ package com.example.demo.entity.system;
 
 import lombok.Data;
 
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 系统角色表
@@ -74,5 +76,8 @@ public class SysRole implements Serializable {
      * 序列化
      */
     private static final long serialVersionUID = 1L;
+
+    @Transient
+    private List<SysMenu> menuResource;
 
 }

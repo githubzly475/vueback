@@ -17,6 +17,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 系统菜单实现类
@@ -71,6 +72,10 @@ public class SysMenuServiceImpl implements SysMenuService {
     public ResultData save(SysMenu bean) {
         bean.setMenuId(UUIDUtils.get32UUID());
         bean.setCreateBy(userCache.getUserId());
+        if(null !=bean.getParentId() && StringUtils.isNotBlank(bean.getParentId())){
+        }else{
+            bean.setParentId("0");
+        }
         int count = sysMenuMapper.insert(bean);
         if(count > 0){
             redisCache.del(userCache.getUsername());
@@ -90,5 +95,40 @@ public class SysMenuServiceImpl implements SysMenuService {
         return ResultData.error("添加失败");
     }
 
+    @Override
+    public List<SysMenu> queryMenuTree(String userId) {
+      List<SysMenu> list=sysMenuMapper.queryMenuListByUserId(userId);
+        List<SysMenu> sysMenus = makeTree(list);
+
+        return sysMenus;
+    }
+
+    @Override
+    public SysMenu queryById(String id) {
+        return sysMenuMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public void deleteById(String id) {
+        List<SysMenu> children = sysMenuMapper.getChildreByParentId(id);
+        List<String> menuList = new ArrayList<String>();
+        if(children.size()>0){
+             menuList =children.stream().map(SysMenu::getMenuId).collect(Collectors.toList());
+
+        }
+        menuList.add(id);
+        int count=sysMenuMapper.deleteByIds(menuList);
+    }
+
+    public  List<SysMenu> makeTree(List<SysMenu> list) {
+        for (SysMenu d:list) {
+            List<SysMenu> children=sysMenuMapper.getChildreByParentId(d.getMenuId());
+            if(null !=children){
+                d.setChildren(children);
+                makeTree(children);
+            }
+        }
+        return list;
+    }
 
 }

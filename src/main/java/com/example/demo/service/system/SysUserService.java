@@ -2,6 +2,8 @@ package com.example.demo.service.system;
 
 import com.example.demo.entity.system.SysUser;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -40,4 +42,5 @@ public interface SysUserService {
      */
     SysUser getUserInfoByUsername(String userName);
 
+    List<SysUser> qyeryUserList(HashMap<String, Object> params);
 }

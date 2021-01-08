@@ -1,9 +1,11 @@
 package com.example.demo.mapper.system;
 
 import com.example.demo.entity.system.SysRole;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface SysRoleMapper {
@@ -27,4 +29,7 @@ public interface SysRoleMapper {
 
     int updateByPrimaryKey(SysRole record);
 
+    List<SysRole> queryRoles(Map<String, Object> params);
+
+    SysRole queryRoleById(@Param(value = "id") String id);
 }

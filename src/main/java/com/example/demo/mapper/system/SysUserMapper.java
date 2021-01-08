@@ -3,6 +3,9 @@ package com.example.demo.mapper.system;
 import com.example.demo.entity.system.SysUser;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * *此处修改为对应实体类名称*
  *
@@ -40,4 +43,5 @@ public interface SysUserMapper {
     int updateByPrimaryKey(SysUser record);
 
 
+    List<SysUser> qyeryUserList(HashMap<String, Object> params);
 }

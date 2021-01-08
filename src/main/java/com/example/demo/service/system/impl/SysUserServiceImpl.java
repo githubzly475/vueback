@@ -9,6 +9,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -48,5 +50,10 @@ public class SysUserServiceImpl implements SysUserService {
     @Override
     public SysUser getUserInfoByUsername(String userName) {
         return sysUserMapper.getUserInfoByUsername(userName);
+    }
+
+    @Override
+    public List<SysUser> qyeryUserList(HashMap<String, Object> params) {
+        return sysUserMapper.qyeryUserList(params);
     }
 }

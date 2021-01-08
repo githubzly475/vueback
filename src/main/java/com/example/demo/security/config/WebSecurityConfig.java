@@ -20,6 +20,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 
 @Configuration
@@ -89,11 +90,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
             .authorizeRequests()
             .antMatchers("/","/user/login/**","user/login/**","/favicon.ico","/captcha.jpg").anonymous()
-            .antMatchers(HttpMethod.GET,"/*.html","/**/*.html","/**/*.css","/**/*.js")
+            .antMatchers("/*.html","/**/*.html","/**/*.css","/**/*.js")
             .permitAll()
             .anyRequest().authenticated()
             .and()
             .headers().frameOptions().disable();
+
 //            .and()
 //            .logout().logoutUrl("/user/logout").logoutSuccessHandler(myLogoutSuccessHandler).deleteCookies("JSESSIONID");
 //            .invalidateHttpSession(true)

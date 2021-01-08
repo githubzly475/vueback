@@ -88,4 +88,11 @@ public interface SysMenuMapper {
      */
     int deleteByPrimaryKey(@Param(value = "menuId") String menuId);
 
+
+    List<SysMenu> queryMenuListByUserId(@Param(value = "userId") String userId);
+
+    List<SysMenu> getChildreByParentId(@Param(value = "menuId") String menuId);
+
+
+    int deleteByIds(@Param(value = "menuList") List<String> menuList);
 }

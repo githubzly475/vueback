@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.mapper.system.sysdept.SysDeptMapper" >
+  <resultMap id="BaseResultMap" type="com.example.demo.entity.system.sysdept.SysDept" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="dept_name" property="deptName" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="VARCHAR" />
+    <result column="dept_sort" property="deptSort" jdbcType="INTEGER" />
+    <result column="del_flag" property="delFlag" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+  </resultMap>
+    <select id="querySysDept" resultType="com.example.demo.entity.system.sysdept.SysDept">
+      select d.*,u.username as createUser from sys_dept d
+      left join sys_user u on d.create_by=u.user_id
+      where d.del_flag=0
+      <if test="deptName !=null and deptName !='' ">
+        and d.dept_name like CONCAT ('%',#{deptName},'%')
+      </if>
+    </select>
+  <select id="getChildreByParentId" resultType="com.example.demo.utils.DeptTree">
+    select id,dept_name as name,parent_id
+    from sys_dept
+    where del_flag=0 and parent_id=#{parentId}
+  </select>
+  <select id="getAllDept" resultType="com.example.demo.entity.system.sysdept.SysDept">
+    select * from sys_dept where del_flag=0
+  </select>
+</mapper>
