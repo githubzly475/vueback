@@ -2,6 +2,7 @@ package com.example.demo.security.config;
 
 import com.example.demo.security.JwtAuthenticationTokenFilter;
 import com.example.demo.security.MyUserDetailsServiceImpl;
+import com.example.demo.security.code.ImageCodeFilter;
 import com.example.demo.security.handler.EntryPointUnauthorizedHandler;
 import com.example.demo.security.handler.MyAuthenticationFailureHandler;
 import com.example.demo.security.handler.MyLogoutSuccessHandler;
@@ -59,8 +60,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     /**
      * 验证码
      */
-//    @Autowired
-//    private ImageCodeFilter imageCodeFilter;
+    @Autowired
+    private ImageCodeFilter imageCodeFilter;
 
     @Autowired
     private MyAuthenticationFailureHandler myAuthenticationFailureHandler;
@@ -84,7 +85,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-//        imageCodeFilter.setAuthenticationFailureHandler(myAuthenticationFailureHandler);
+        imageCodeFilter.setAuthenticationFailureHandler(myAuthenticationFailureHandler);
         http
             .csrf().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()

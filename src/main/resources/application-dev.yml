@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 8085
 
 spring:
   main:
@@ -11,7 +11,7 @@ spring:
       file-size-threshold: 1MB
       max-request-size: 512MB
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/vue?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8&allowMultiQueries=true&useAffectedRows=true
+    url: jdbc:mysql://192.168.0.99:3306/vue?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8&allowMultiQueries=true&useAffectedRows=true
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver

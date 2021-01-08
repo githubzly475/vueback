@@ -46,7 +46,7 @@ public class JwtTokenUtil {
 
     private static final Long expiration = 180000000L;
 
-    private static final String tokenHeader = "tokenHeader";
+    private static final String tokenHeader = "Authorization";
 
     private static final  String tokenHead = "tokenHead";
 
