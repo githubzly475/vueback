@@ -9,8 +9,10 @@ import com.example.demo.log.annotation.SysLog;
 import com.example.demo.service.system.SysMenuService;
 import com.example.demo.utils.MenuTreeUtil;
 import com.example.demo.utils.ResultData;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -67,4 +69,44 @@ public class SysMenuController {
     }
 
 
+    @RequestMapping("/queryMenu")
+    public ResultData queryMenu(SysMenu sysMenu){
+       /* 根据用户查询李彪
+       String userId = userCache.getUserId();
+       List<SysMenu> list=sysMenuService.queryMenuTree(userId);*/
+
+        List<SysMenu> list=sysMenuService.queryMenuTree("");
+        return ResultData.ok(list);
+    }
+
+    @RequestMapping("/addMenu")
+    public ResultData addMenu(@RequestBody SysMenu sysMenu){
+        String menuId = sysMenu.getMenuId();
+        if(null !=menuId && StringUtils.isNotBlank(menuId)){
+            ResultData update = sysMenuService.update(sysMenu);
+            return update;
+        }else{
+            ResultData resultData = sysMenuService.save(sysMenu);
+            return resultData;
+        }
+    }
+    @RequestMapping("/queryById")
+    public ResultData queryById(String id){
+
+        SysMenu sysMenu=sysMenuService.queryById(id);
+        return ResultData.ok(sysMenu);
+    }
+
+    @RequestMapping("/deleteById")
+    public ResultData deleteById(String id){
+        try{
+            sysMenuService.deleteById(id);
+            return ResultData.ok();
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResultData.error();
+        }
+
+
+    }
 }

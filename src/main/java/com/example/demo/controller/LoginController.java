@@ -19,10 +19,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -88,7 +85,7 @@ public class LoginController {
      * @return
      */
     @PostMapping("/user/login")
-    public ResultData login(SysUser user, HttpServletRequest request) {
+    public ResultData login(@RequestBody SysUser user, HttpServletRequest request) {
 
         //用户验证
         Authentication authentication = null;
